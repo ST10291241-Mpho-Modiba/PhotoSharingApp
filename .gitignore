@@ -1,2 +1,9 @@
 #We are adding a statement to ignore node modules
 node_modules/ 
+
+#enviroment variables
+.env
+# this means any thing with the env will not be pushed to git
+.env.*
+# Certificate files
+Certs
