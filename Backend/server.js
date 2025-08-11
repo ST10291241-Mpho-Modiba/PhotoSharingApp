@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import fs from 'fs'
 import https from 'https'
 import { Console } from 'console';
+import mongoose from 'mongoose';
 
 // We are loading the enviroments variables from .env
 dotenv.config();
@@ -10,6 +11,7 @@ dotenv.config();
 //Initialise express app
 const app = express();
 const PORT = process.env.PORT || 5000;
+const MONGODB_URI = process.env.MONGODB_URI
 
 // Adding middleware to parse JSON Bodies; Middleware using software that you did not create yourself
 app.use(express.json())
@@ -26,13 +28,20 @@ const Options ={
     cert: fs.readFileSync('./Certs/localhost.pem')
 }
 
+//Adding MongoDB Connection
+mongoose.connect(MONGODB_URI,{
+
+}).then(()=>console.log(`MongoDB connected successfully`))
+.catch(err =>console.error(`MongoDB connection error`,err));
+
+
 //Start the Http server
-app.listen(PORT,() => {
-console.log(`Server is running on Port ${PORT}`)
-});
+//app.listen(PORT,() => {
+//console.log(`Server is running on Port ${PORT}`)
+//});
 
 // starting HTTPS server
 https.createServer(Options,app).listen(PORT,()=>{
-Console.log(`Https Server running on port ${PORT}`)
+console.log(`Https Server running on port ${PORT}`)
 
 })
