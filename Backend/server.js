@@ -4,7 +4,7 @@ import fs from 'fs'
 import https from 'https'
 import { Console } from 'console';
 import mongoose from 'mongoose';
-
+import routes from './Routes/index.js'
 // We are loading the enviroments variables from .env
 dotenv.config();
 
@@ -16,17 +16,17 @@ const MONGODB_URI = process.env.MONGODB_URI
 // Adding middleware to parse JSON Bodies; Middleware using software that you did not create yourself
 app.use(express.json())
 
-//Add basic route
-app.get('/',(req,res) =>{
+//routes 
+app.use('/api',routes);
 
-    res.send('Welcome to the PhotoShare API');
-})
+//Add basic route
 
 //use MkCert generated certificates for HTTPS
 const Options ={
     key: fs.readFileSync('./Certs/localhost-key.pem'),
     cert: fs.readFileSync('./Certs/localhost.pem')
 }
+
 
 //Adding MongoDB Connection
 mongoose.connect(MONGODB_URI,{
