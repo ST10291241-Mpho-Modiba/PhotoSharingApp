@@ -1,13 +1,14 @@
 import mongoose  from 'mongoose';
 import bcrypt from 'bcrypt';
 const userSchema = new mongoose.Schema({
-useName: {
+username: {
     type: String,
     required: true,
     unique: true,
-    trim: true
+    trim: true,
+    minlength: 3
 },
-Email: {
+email: {
     type: String,
     required: true,
     unique: true,
@@ -15,7 +16,7 @@ Email: {
     //This is how an email restrition is put in a webiste Mongo will validate the email to make sure it's a valid email
     match:[/.+@+\..+/,'Please fill in a vaild email']
 },
-Password: {
+password: {
     type: String,
     required: true,
     minlength: 12,
@@ -25,7 +26,8 @@ role:{
     enum:['admin','user'],
     default: 'user',
 }
-})
+
+}, {timestamps: true})
 
 // Hash the password before saving the password
 userSchema.pre('save',async function(next) {
