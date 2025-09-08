@@ -5,13 +5,15 @@ import https from 'https'
 import { Console } from 'console';
 import mongoose from 'mongoose';
 import routes from './Routes/index.js'
+import connectDB from './db/conn.js';
+
 // We are loading the enviroments variables from .env
 dotenv.config();
 
 //Initialise express app
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI
+//const MONGODB_URI = process.env.MONGODB_URI
 
 // Adding middleware to parse JSON Bodies; Middleware using software that you did not create yourself
 app.use(express.json())
@@ -29,10 +31,12 @@ const Options ={
 
 
 //Adding MongoDB Connection
-mongoose.connect(MONGODB_URI,{
+connectDB();
 
-}).then(()=>console.log(`MongoDB connected successfully`))
-.catch(err =>console.error(`MongoDB connection error`,err));
+//mongoose.connect(MONGODB_URI,{
+
+//}).then(()=>console.log(`MongoDB connected successfully`))
+//.catch(err =>console.error(`MongoDB connection error`,err));
 
 
 //Start the Http server
