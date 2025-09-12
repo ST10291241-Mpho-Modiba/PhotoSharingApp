@@ -42,3 +42,31 @@ body('password')
     next();
 }
 ]
+
+export const validatePhotoUpdate=[
+body('title').optional().isLength({min: 3}).withMessage('Title must be at least 3 character'),
+body('desciption').optional().isString(),
+
+(req,res,next) => {
+    const error = validationResult(req);
+    if(!error.isEmpty()){
+        return res.status(400).json({errors: errors.array()});
+    }
+    next();
+}
+];
+
+export const validUserUpdate =[
+    body('username').optional().isLength({min: 3}).withMessage('Username must be at least 3 characters'),
+    body('email').optional().isEmail().withMessage('Invalid email address'),
+    (req,res,next)=>{
+        const error = validationResult(req);
+        if(!error.isEmpty()){
+            return res.status(400).json({errors:error.array()})
+        }
+        next();
+    }
+];
+
+
+
