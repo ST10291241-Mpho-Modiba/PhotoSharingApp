@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const photoSchema = new mongoose.Scheme({
+const photoSchema = new mongoose.Schema({
     title:{
         type: String,
         required: true,
@@ -21,10 +21,10 @@ const photoSchema = new mongoose.Scheme({
         required: true,
     },
     owner:{
-        type: mongoose.Scheme.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref:'User',
         required: true,
-    },
+    }
 }, {timestamps:true});
 
 const Photo = mongoose.model('Photo', {photoSchema});

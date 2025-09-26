@@ -1,7 +1,8 @@
 import {body, validationResult} from 'express-validator';
 
 export const validateSignUp = [
-body('username').notEmpty()
+body('username')
+.notEmpty()
 .withMessage('Username is required')
 .isLength({min:3})
 .withMessage('Username must be at least three characters long'),
@@ -12,8 +13,8 @@ body('email')
 
 body('password')
 .notEmpty()
-.withMessage('Passwordis required')
-.isLength({min:12}).withMessage('Username must be at least 12 characters long'),
+.withMessage('Password is required')
+.isLength({min:6}).withMessage('Password must be at least 6 characters long'),
 
 (req,res,next)=>{
     const error = validationResult(req);
@@ -31,8 +32,8 @@ body('email')
 
 body('password')
 .notEmpty()
-.withMessage('Passwordis required')
-.isLength({min:12}).withMessage('Username must be at least 12 characters long'),
+.withMessage('Password is required')
+.withMessage('Password must be at least 6 characters long'),
 
 (req,res,next)=>{
     const error = validationResult(req);
@@ -56,7 +57,7 @@ body('desciption').optional().isString(),
 }
 ];
 
-export const validUserUpdate =[
+export const validateUserUpdate =[
     body('username').optional().isLength({min: 3}).withMessage('Username must be at least 3 characters'),
     body('email').optional().isEmail().withMessage('Invalid email address'),
     (req,res,next)=>{
