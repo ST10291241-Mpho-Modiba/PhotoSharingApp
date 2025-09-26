@@ -2,7 +2,7 @@ import User from '../Models/User.js';
 
 export const getMe = async(req,res)=>{
     try{
-const user  = await User.findById(req.user.id).select('passowrd');
+const user  = await User.findById(req.user.id).select('password');
 if(!user){
     return res.status(404).json({error: 'User not found'})
 }
@@ -29,7 +29,7 @@ try{
 
 export const deleteUserById =  async(req,res) =>{
 try{
-    const user = await User.findByIdAndDelete(req.parama.id).select('password');
+    const user = await User.findByIdAndDelete(req.params.id).select('password');
     if(!user){
         return res.status(404).json({error: 'User not found'});
     }
@@ -79,7 +79,7 @@ export const getAllUsers = async(req,res) =>{
 
 export const demoteUserFromAdmin = async(req,res)=>{
     try{
-        const user = await User.findByIdAndUpdate(req.parama.id,{$set: {role:'user'}},{new : true}).select('password');
+        const user = await User.findByIdAndUpdate(req.params.id,{$set: {role:'user'}},{new : true}).select('password');
         if(!user){
             return res.status(404).json({error: 'User not found'});
         }
@@ -88,4 +88,8 @@ export const demoteUserFromAdmin = async(req,res)=>{
         res.status(500).json({error: err.message});
     }
 };
+
+
+
+
 

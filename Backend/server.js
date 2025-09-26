@@ -6,6 +6,11 @@ import { Console } from 'console';
 import mongoose from 'mongoose';
 import routes from './Routes/index.js'
 import connectDB from './db/conn.js';
+import rateLimit from 'express-rate-limit';
+import morgan from 'morgan';
+import xss from 'xss-clean';
+import cors from 'cors';
+import helmet from 'helmet';
 
 // We are loading the enviroments variables from .env
 dotenv.config();
@@ -13,10 +18,23 @@ dotenv.config();
 //Initialise express app
 const app = express();
 const PORT = process.env.PORT || 5000;
-//const MONGODB_URI = process.env.MONGODB_URI
+const USE_HTTPS = process.env.USE_HTTPS ==='true';
 
+app.use(helmet());
+app.use(morgan('dev'));
 // Adding middleware to parse JSON Bodies; Middleware using software that you did not create yourself
 app.use(express.json())
+
+const allowedOrigins = [
+    'https://localhost:5173',
+    'http://localhost:5173',
+    'https://localhost:3000',
+    'http://localhost:3000',
+];
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true,
+}))
 
 //routes 
 app.use('/api',routes);
@@ -25,24 +43,34 @@ app.use('/api',routes);
 
 //use MkCert generated certificates for HTTPS
 const Options ={
-    key: fs.readFileSync('./Certs/localhost-key.pem'),
-    cert: fs.readFileSync('./Certs/localhost.pem')
+    key: fs.readFileSync('./Certs/example.local-key.pem'),
+    cert: fs.readFileSync('./Certs/example.local.pem')
 }
+
+//Global rate limiting (100 requests per 15 minutes per IP)
+const limiter = rateLimit({
+    windowMs: 15 *60*1000,
+    max: 100,
+    standardHeaders:true,
+    legacyHeaders: false,
+});
+
+app.use(limiter);
+
+const loginLimiter = rateLimit({
+    windowMs: 15*60*1000,
+    max: 100,
+    message:"Too many login attempts. Please try again later",
+    standardHeaders: true,
+    legacyHeaders: false,
+
+})
+
 
 
 //Adding MongoDB Connection
 connectDB();
 
-//mongoose.connect(MONGODB_URI,{
-
-//}).then(()=>console.log(`MongoDB connected successfully`))
-//.catch(err =>console.error(`MongoDB connection error`,err));
-
-
-//Start the Http server
-//app.listen(PORT,() => {
-//console.log(`Server is running on Port ${PORT}`)
-//});
 
 // starting HTTPS server
 https.createServer(Options,app).listen(PORT,()=>{
